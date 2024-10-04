@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>l'Hôpital's Rule Calculator</title>
+</head>
+<body>
+    <h1>l'Hôpital's Rule Calculator</h1>
+    <form id="limit-form">
+        <label for="function1">Enter function f(x):</label>
+        <input type="text" id="function1" placeholder="Example: x^2 - 1" required>
+        <br>
+        <label for="function2">Enter function g(x):</label>
+        <input type="text" id="function2" placeholder="Example: x - 1" required>
+        <br>
+        <label for="approach">Value to approach (c):</label>
+        <input type="number" id="approach" step="any" required>
+        <br>
+        <button type="submit">Calculate Limit</button>
+    </form>
+    <h2>Result: <span id="result"></span></h2>
+
+    <script>
+        // Function to evaluate the mathematical expression
+        function evaluateExpression(expr, x) {
+            // Replace x in the expression with the numerical value
+            const evalExpr = expr.replace(/x/g, x);
+            // Use the Function constructor to evaluate the expression
+            return new Function(`return ${evalExpr}`)();
+        }
+
+        // Function to compute the derivative using numerical differentiation
+        function numericalDerivative(func, x, h = 1e-10) {
+            const f_x_plus_h = evaluateExpression(func, x + h);
+            const f_x_minus_h = evaluateExpression(func, x - h);
+            return (f_x_plus_h - f_x_minus_h) / (2 * h);
+        }
+
+        // Function to calculate limit using l'Hôpital's rule
+        function calculateLimit(f, g, c) {
+            let f_val = evaluateExpression(f, c);
+            let g_val = evaluateExpression(g, c);
+
+            // Check for indeterminate forms
+            if (f_val === 0 && g_val === 0) {
+                // Compute the derivatives
+                const f_prime = numericalDerivative(f, c);
+                const g_prime = numericalDerivative(g, c);
+                // Apply l'Hôpital's rule
+                return f_prime / g_prime;
+            } else {
+                // If it's not an indeterminate form, return the limit directly
+                return f_val / g_val;
+            }
+        }
+
+        // Event listener for form submission
+        document.getElementById('limit-form').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent form submission
+
+            // Get values from the form
+            const function1 = document.getElementById('function1').value;
+            const function2 = document.getElementById('function2').value;
+            const approach = parseFloat(document.getElementById('approach').value);
+
+            // Calculate limit
+            const result = calculateLimit(function1, function2, approach);
+
+            // Display result
+            document.getElementById('result').innerText = result.toFixed(5);
+        });
+    </script>
+</body>
+</html>
