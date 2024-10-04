@@ -1,0 +1,17 @@
+basepossible-backend/
+│
+├── config/
+│   └── db.config.js   // Database configuration
+├── controllers/
+│   └── user.controller.js  // Controller for user-related logic
+├── models/
+│   └── user.model.js  // Sequelize model for 'users' table
+├── routes/
+│   └── user.routes.js  // Routes for user-related API endpoints
+├── middleware/
+│   └── error.middleware.js  // Error handling middleware
+├── services/
+│   └── user.service.js  // User-related business logic
+├── .env               // Environment variables (DB connection info)
+├── app.js             // Main Express app
+└── server.js          // Server entry point
