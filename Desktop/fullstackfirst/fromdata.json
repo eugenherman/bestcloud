@@ -1,0 +1,4 @@
+[
+    { "id": 1, "title": "Buy groceries", "description": "Milk, Bread, Eggs", "completed": false },
+    { "id": 2, "title": "Study", "description": "JavaScript, React", "completed": false }
+]
