@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Reminder App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+			
+			background-image: url("C:/Users/jukka/Desktop/Game_New/water-ocean.png");
+			
+            background-color: #ADD8E6;
+            color: #FFFFFF;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            overflow: scroll;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 1.2em;
+        }
+
+        input[type="number"], input[type="text"] {
+            padding: 10px;
+            margin: 10px;
+            font-size: 1em;
+            border-radius: 5px;
+            border: none;
+        }
+
+        button {
+            padding: 10px 20px;
+
+        
+
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+
+        .start-button {
+            background-color: #32CD32;
+            color: #FFFFFF;
+        }
+
+        .stop-button {
+            background-color: #FF4500;
+            color: #FFFFFF;
+        }
+
+        footer {
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+
+        .shapes-container, .water-container, .text-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            background-color: #1E90FF;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .shape .face {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #1E90FF;
+        }
+
+        .shape .face::before, .shape .face::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background-color: #FFFFFF;
+            border-radius: 50%;
+            top: 15px;
+        }
+
+        .shape .face::before {
+            left: 15px;
+        }
+
+        .shape .face::after {
+            right: 15px;
+        }
+
+        .shape .smile {
+            position: absolute;
+            width: 20px;
+            height: 10px;
+            border: 2px solid #FFFFFF;
+            border-radius: 10px;
+            border-color: transparent transparent #FFFFFF transparent;
+            bottom: 10px;
+        }
+
+        .water-splash {
+            position: absolute;
+            background-color: #00BFFF;
+            border-radius: 50%;
+            animation: splash 1s ease-out forwards;
+        }
+
+        .wave-effect {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100vw;
+            height: 0;
+            background-color: rgba(0, 0, 255, 0.5);
+            animation: wave-expand 2s ease-out forwards;
+        }
+
+        .motivational-text {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2em;
+            color: #FFFFFF;
+            text-shadow: 2px 2px 4px #000000;
+            opacity: 0;
+            animation: fade-in-out 4s ease-out forwards;
+        }
+		
+		
+		
+		
+		
+		#jug-container {
+            position: fixed;
+            top: 50%;
+            right: 0;
+			
+            transform: translateY(-50%);
+            width: 200px;
+            height: auto;
+        }
+
+        #jug-container img {
+            width: 100%;
+            height: auto;
+			
+        }
+
+		
+		
+		
+
+        @keyframes float {
+            0% {
+                transform: translateY(100%);
+                opacity: 0.7;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+        }
+
+        @keyframes splash {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        @keyframes wave-expand {
+            0% {
+                height: 0;
+                opacity: 1;
+            }
+            100% {
+                height: 100%;
+                opacity: 0;
+            }
+        }
+
+        @keyframes fade-in-out {
+            0% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+		
+		
+		
+		
+		
+		#language-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+}
+
+#language-select {
+    padding: 5px 10px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    background-color: #FFFFFF;
+    color: #000000;
+    font-weight: bold;
+}
+
+#language-select:hover {
+    background-color: #E0E0E0;
+}
+		
+		
+		
+		.
+    </style>
+</head>
+<body>
+    
+	
+	
+
+	
+	<div id="language-container">
+        <select id="language-select" onchange="switchLanguage()">
+            <option value="en">English</option>
+            <option value="fi">Finnish</option>
+            <option value="sv">Swedish</option>
+        </select>
+    </div>
+    <div class="container">
+        <h1 id="app-title">Water Reminder App</h1>
+
+        <label for="name" id="label-name">Name:</label>
+        <br>
+        <input type="text" id="name" placeholder="Enter your name">
+        <br>
+
+        <label for="height" id="label-height">Height (cm):</label>
+        <br>
+        <input type="number" id="height" placeholder="Enter your height">
+        <br>
+
+        <label for="weight" id="label-weight">Weight (kg):</label>
+        <br>
+        <input type="number" id="weight" placeholder="Enter your weight">
+        <br>
+
+        <label for="interval" id="label-interval">Set Reminder Interval (minutes):</label>
+        <br>
+        <input type="number" id="interval" min="1" value="1">
+        <br>
+
+        <button class="start-button" onclick="saveDataAndStartReminder()">Save & Start Reminder</button>
+        <button class="stop-button" onclick="stopReminder()">Stop Reminder</button>
+        <button class="statistics-button" onclick="getStatistics()" id="btn-statistics">Statistics</button>
+        <p id="status">Status: Stopped</p>
+
+        <div id="statistics" style="margin-top: 20px; font-size: 1.2em;"></div>
+    </div>
+	
+	</body>
+	
+
+	
+
+    <div class="shapes-container" id="shapes-container"></div>
+    <div class="water-container" id="water-container"></div>
+    <div class="text-container" id="text-container"></div>
+
+    <div id="jug-container">
+        <img src="https://via.placeholder.com/200?text=" alt="">
+    </div>
+
+    <div id="mug-container">
+        <img src="C:\Users\jukka\Desktop\Game_New\glass.png" alt="">
+    </div>
+
+    <footer>
+        <h2>Stay hydrated and healthy!</h2>
+    </footer>
+
+    <audio id="reminder-sound" src="https://www.soundjay.com/button/beep-01a.mp3"></audio>
+
+    <script>
+        let reminderInterval;
+        let intervalId;
+
+        function saveDataAndStartReminder() {
+            const name = document.getElementById('name').value;
+            const height = document.getElementById('height').value;
+            const weight = document.getElementById('weight').value;
+
+            if (!name || !height || !weight) {
+                alert(getTranslation('fillAllFields'));
+                return;
+            }
+
+            const data = { name, height, weight, remindersSet: 0, remindersCompleted: 0 };
+            localStorage.setItem('userData', JSON.stringify(data));
+
+            startReminder();
+        }
+
+        function startReminder() {
+            const intervalInput = document.getElementById('interval');
+            const status = document.getElementById('status');
+
+            const minutes = parseInt(intervalInput.value, 10);
+            if (isNaN(minutes) || minutes < 1) {
+                alert(getTranslation('enterValidNumber'));
+                return;
+            }
+
+            reminderInterval = minutes * 60 * 1000; // Convert minutes to milliseconds
+            stopReminder(); // Stop any existing reminders before starting a new one
+
+            let userData = JSON.parse(localStorage.getItem('userData'));
+            userData.remindersSet++;
+            localStorage.setItem('userData', JSON.stringify(userData));
+
+            intervalId = setInterval(() => {
+                playReminderSound();
+                alert(getTranslation('drinkWater'));
+                userData = JSON.parse(localStorage.getItem('userData'));
+                userData.remindersCompleted++;
+                localStorage.setItem('userData', JSON.stringify(userData));
+                createShapes();
+                createWaterEffect();
+                createWaveEffect();
+                displayMotivationalText();
+            }, reminderInterval);
+
+            status.textContent = getTranslation('statusRunning');
+        }
+
+        function stopReminder() {
+            if (intervalId) {
+                clearInterval(intervalId);
+                intervalId = null;
+            }
+            document.getElementById('status').textContent = getTranslation('statusStopped');
+        }
+
+        function getStatistics() {
+            const userData = JSON.parse(localStorage.getItem('userData'));
+            if (!userData) {
+                alert(getTranslation('noDataAvailable'));
+                return;
+            }
+
+            const statsDiv = document.getElementById('statistics');
+            statsDiv.innerHTML = `
+                <strong>${getTranslation('statisticsTitle')}</strong><br>
+                ${getTranslation('name')}: ${userData.name}<br>
+                ${getTranslation('height')}: ${userData.height} cm<br>
+                ${getTranslation('weight')}: ${userData.weight} kg<br>
+                ${getTranslation('remindersSet')}: ${userData.remindersSet}<br>
+                ${getTranslation('remindersCompleted')}: ${userData.remindersCompleted}
+            `;
+        }
+
+        const translations = {
+            en: {
+                appTitle: 'Water Reminder App',
+                fillAllFields: 'Please fill in your name, height, and weight.',
+                enterValidNumber: 'Please enter a valid number greater than or equal to 1.',
+                drinkWater: 'Time to drink water! Stay hydrated!',
+                statusRunning: 'Status: Running',
+                statusStopped: 'Status: Stopped',
+                noDataAvailable: 'No data available. Please start the reminder first.',
+                statisticsTitle: 'Statistics',
+                name: 'Name',
+                height: 'Height',
+                weight: 'Weight',
+                remindersSet: 'Set Reminder Interval',
+
+                intervalLabel: "Set Reminder Interval (minutes):",
+                remindersCompleted: 'Reminders Completed'
+            },
+            fi: {
+                appTitle: 'Vedenmuistutussovellus',
+                fillAllFields: 'Täytä nimi, pituus ja paino.',
+                enterValidNumber: 'Anna kelvollinen numero, joka on vähintään 1.',
+                drinkWater: 'Aika juoda vettä! Pysy nesteytettynä!',
+                statusRunning: 'Tila: Käynnissä',
+                statusStopped: 'Tila: Pysäytetty',
+                noDataAvailable: 'Ei tietoja saatavilla. Aloita muistutus ensin.',
+                statisticsTitle: 'Tilastot',
+                name: 'Nimi',
+                height: 'Pituus',
+                weight: 'Paino',
+                remindersSet: 'Asetetut muistutukset',
+
+                intervalLabel: "Aseta muistutusväli (minuuttia):",
+                remindersCompleted: 'Suoritetut muistutukset'
+            },
+            sv: {
+                appTitle: 'Vattenpåminnelse App',
+                fillAllFields: 'Fyll i namn, längd och vikt.',
+                enterValidNumber: 'Ange ett giltigt nummer som är minst 1.',
+                drinkWater: 'Dags att dricka vatten! Håll dig hydrerad!',
+                statusRunning: 'Status: Körs',
+                statusStopped: 'Status: Stoppad',
+                noDataAvailable: 'Inga data tillgängliga. Starta påminnelsen först.',
+                statisticsTitle: 'Statistik',
+                name: 'Namn',
+                height: 'Längd',
+                weight: 'Vikt',
+                remindersSet: 'Inställda påminnelser',
+                
+				
+                intervalLabel: "Ställ in påminnelseintervall (minuter):",
+                remindersCompleted: 'Slutförda påminnelser'
+            }
+        };
+
+        function getTranslation(key) {
+            const lang = document.getElementById('language-select').value;
+            return translations[lang][key] || translations['en'][key];
+        }
+
+        
+		
+		
+		function switchLanguage() {
+    const lang = document.getElementById('language-select').value;
+
+    document.getElementById('app-title').textContent = getTranslation('appTitle');
+    document.getElementById('label-name').textContent = getTranslation('name') + ':';
+    document.getElementById('label-height').textContent = getTranslation('height') + ' (cm):';
+    document.getElementById('label-weight').textContent = getTranslation('weight') + ' (kg):';
+    document.getElementById('label-interval').textContent = getTranslation('intervalLabel'); // Fixed key
+    document.getElementById('btn-statistics').textContent = getTranslation('statisticsTitle');
+}
+		
+		
+
+        window.onload = () => {
+            const userData = JSON.parse(localStorage.getItem('userData'));
+            if (userData) {
+                document.getElementById('name').value = userData.name;
+                document.getElementById('height').value = userData.height;
+                document.getElementById('weight').value = userData.weight;
+            }
+            switchLanguage();
+        };
+		
+		
+    </script>
+<h2>The app is designed in accordance with the recommendations of the healthcare system</h2>
+</body>
+</html>
